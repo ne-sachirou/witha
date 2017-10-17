@@ -4,25 +4,41 @@ defmodule Witha.Mixfile do
   def project do
     [
       app: :witha,
-      version: "0.1.0",
-      elixir: "~> 1.5",
+      deps: deps(),
+      description: "With aspect: Monad chain, like Haskell's `do` or Clojure's `cats.core/alet`.",
+      elixir: "~> 1.4",
+      package: package(),
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      version: "0.1.0",
+      # Docs
+      docs: [
+        main: "readme",
+        extras: ["README.md"],
+      ],
+      homepage_url: "https://github.com/ne-sachirou/witha",
+      name: "Witha",
+      source_url: "https://github.com/ne-sachirou/witha",
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
-  def application do
-    [
-      extra_applications: []
-    ]
-  end
+  def application, do: [extra_applications: []]
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
+      {:ex_doc, "~> 0.17", only: :dev, runtime: false},
+      {:inner_cotton, github: "ne-sachirou/inner_cotton", only: [:dev, :test]},
+    ]
+  end
+
+  defp package do
+    [
+      files: ["LICENSE", "README.md", "mix.exs", "lib"],
+      licenses: ["GPL-3.0"],
+      links: %{
+        "GitHub": "https://github.com/ne-sachirou/witha",
+      },
+      maintainers: ["ne_Sachirou <utakata.c4se@gmail.com>"],
+      name: :witha,
     ]
   end
 end
