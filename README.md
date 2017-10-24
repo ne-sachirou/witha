@@ -14,7 +14,7 @@ Add `witha` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:witha, "~> 0.1.0"}
+    {:witha, "~> 0.1.1"}
   ]
 end
 ```
