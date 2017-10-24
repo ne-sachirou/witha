@@ -35,42 +35,20 @@ defmodule Witha.Error do
 
   @behaviour Witha.Aspect
 
-  @doc false
-  def wrap(prepare, bindings, do_block) do
-    prepare = quote do
-      unquote prepare
-      error_6f09fb1f5d494b798537c9aff5aab6e1 = nil
-    end
-    bindings = for {:<-, lines, [matcher, call]} <- List.wrap bindings do
-      {
-        :<-,
-        lines,
-        [
-          quote(do: {unquote(matcher), error_6f09fb1f5d494b798537c9aff5aab6e1}),
-          quote do
-            if is_nil error_6f09fb1f5d494b798537c9aff5aab6e1 do
-              try do
-                case unquote call do
-                  {:ok, value} -> {value, nil}
-                  {:error, error} -> {nil, error}
-                end
-              rescue
-                error -> {nil, error}
-              end
-            else
-              {nil, error_6f09fb1f5d494b798537c9aff5aab6e1}
-            end
+  def new(right), do: quote(do: {:ok, unquote(right)})
+
+  def flat_map(either, call) do
+    quote do
+      case unquote either do
+        {:ok, _} ->
+          case unquote call do
+            {:ok, right} -> {{:ok, right}, right}
+            {:error, left} -> {{:error, left}, nil}
           end
-        ]
-      }
-    end
-    do_block = quote do
-      if is_nil error_6f09fb1f5d494b798537c9aff5aab6e1 do
-        {:ok, unquote(do_block)}
-      else
-        {:error, error_6f09fb1f5d494b798537c9aff5aab6e1}
+        {:error, left} -> {{:error, left}, nil}
       end
     end
-    {prepare, bindings, do_block}
   end
+
+  def handle_error(error), do: {:error, error}
 end

@@ -35,34 +35,21 @@ defmodule Witha.Nilable do
 
   @behaviour Witha.Aspect
 
-  @doc false
-  def wrap(prepare, bindings, do_block) do
-    prepare = quote do
-      unquote prepare
-      nil_d30ad395e07d4339aaca73e36e2383ba = true
-    end
-    bindings = for {:<-, lines, [matcher, call]} <- List.wrap bindings do
-      {
-        :<-,
-        lines,
-        [
-          matcher,
-          quote  do
-            nil_d30ad395e07d4339aaca73e36e2383ba =
-            if is_nil nil_d30ad395e07d4339aaca73e36e2383ba do
-              nil
-            else
-              try do
-                unquote call
-              rescue
-                _ -> nil
-              end
-            end
+  def new(nil), do: true
+  def new(just), do: just
+
+  def flat_map(maybe, call) do
+    quote do
+      case unquote maybe do
+        nil -> {nil, nil}
+        _ ->
+          case unquote call do
+            nil -> {nil, nil}
+            just -> {just, just}
           end
-        ]
-      }
+      end
     end
-    do_block = quote do: nil_d30ad395e07d4339aaca73e36e2383ba && unquote(do_block)
-    {prepare, bindings, do_block}
   end
+
+  def handle_error(_error), do: nil
 end
