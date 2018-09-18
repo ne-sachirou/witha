@@ -1,3 +1,5 @@
+DEPRECATED: Please use ordinal `with` macro.
+
 # Witha
 With aspect: Monad chain, like Haskell's `do` or Clojure's `cats.core/alet`.
 
